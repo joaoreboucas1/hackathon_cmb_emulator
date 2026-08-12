@@ -1,14 +1,14 @@
 from math import exp
 import numpy as np
 import camb
-from scipy.stats.qmc import LatinHypercube, scale
+from scipy.stats.qmc import LatinHypercube, Sobol, scale
 import matplotlib.pyplot as plt
 from itertools import combinations
 
 # Cosmology array:
 # [h, omch2, ombh2, ln(10^10*As), ns, tau]
-lower_bounds = [0.2, 0.001, 0.005, 1.61, 0.7, 0.01]
-upper_bounds = [1.0, 0.99,  0.04,  5.0,  1.3, 0.3 ]
+lower_bounds = [0.6, 0.05, 0.01, 2.0, 0.8, 0.01]
+upper_bounds = [0.8, 0.20, 0.03, 4.0, 1.1, 0.25]
 param_labels = ["h", "omch2", "ombh2", "ln(10^10 As)", "ns", "tau"]
 
 def get_cmb_spectra(cosmo):
@@ -50,9 +50,10 @@ def plot_pairwise_samples(samples, errors, labels, filename="pairwise_scatter.pn
 
 
 if __name__ == "__main__":
-    NUM_SAMPLES = 1_200
-    data_path = "./data/test/"
-    sampler = LatinHypercube(d=len(lower_bounds))
+    NUM_SAMPLES = 512
+    data_path = "./data/train_512_sobol/"
+    # sampler = LatinHypercube(d=len(lower_bounds))
+    sampler = Sobol(d=len(lower_bounds))
     all_samples = scale(sampler.random(n=NUM_SAMPLES), lower_bounds, upper_bounds)
     samples = []
     errors = []
